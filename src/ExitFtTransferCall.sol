@@ -90,7 +90,9 @@ contract ExitFtTransferCall is AccessControl {
     function ftTransferCall(
         IEvmErc20 token,
         string memory tokenId,
-        uint128 amount
+        uint128 amount,
+        string memory ftTransferCallReceiverId,
+        string memory ftTransferCallMsg
     ) public payable {
         if (address(token) != address(0)) {
             require(msg.value == 0, "Cannot send both ETH and tokens");
@@ -107,13 +109,14 @@ contract ExitFtTransferCall is AccessControl {
         bytes memory data = abi.encodePacked(
             "{",
             '"receiver_id": "',
-            nearAccountId,
+            _escapeJsonString(ftTransferCallReceiverId),
             '",',
             '"amount": "',
             Strings.toString(amount),
             '",',
-            '"msg": "75d44b5a0f717b05cfa0a5869f5245a28bf21f1e9d13778c2e7e176b5ffb1a8d"',
-            "}"
+            '"msg": "',
+            _escapeJsonString(ftTransferCallMsg),
+            '"}'
         );
 
         PromiseCreateArgs memory callFtTransfer = this.foo(tokenId, data);
@@ -152,6 +155,28 @@ contract ExitFtTransferCall is AccessControl {
         );
 
         return callFtTransfer;
+    }
+
+    // Consider using a library for this
+    function _escapeJsonString(string memory source) internal pure returns (string memory) {
+        bytes memory input = bytes(source);
+        bytes memory temp = new bytes(input.length * 2); // Allocate maximum possible size
+        uint256 index = 0;
+
+        for (uint256 i = 0; i < input.length; i++) {
+            if (input[i] == '"' || input[i] == '\\') {
+                temp[index++] = '\\'; // Add escape character
+            }
+            temp[index++] = input[i];
+        }
+
+        // Create a new bytes array with the exact length
+        bytes memory escaped = new bytes(index);
+        for (uint256 i = 0; i < index; i++) {
+            escaped[i] = temp[i];
+        }
+
+        return string(escaped);
     }
 
     // This function is the callback from `ftTransferCall` which refunds the user
