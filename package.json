@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "@auroraisnear/aurora-sdk": "^0.0.1",
     "@openzeppelin/contracts": "^4.8.1"
   }
 }
