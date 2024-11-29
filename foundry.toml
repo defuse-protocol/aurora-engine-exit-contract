@@ -2,9 +2,13 @@
 src = "src"
 out = "out"
 libs = ["node_modules", "lib"]
+solc = "0.8.17"
 remappings = [
     "@auroraisnear/=node_modules/@auroraisnear/",
     "@openzeppelin/=node_modules/@openzeppelin/",
 ]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+[rpc_endpoints]
+aurora = "https://mainnet.aurora.dev"
