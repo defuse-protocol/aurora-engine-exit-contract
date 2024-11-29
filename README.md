@@ -1,66 +1,27 @@
-## Foundry
+# AuroraEngine Exit Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Introduction
 
-Foundry consists of:
-
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
+This repository contains a short term solution for exiting from the AuroraEngine along with performing
+`ft_transfer_call` to the destination account.
 
 ## Usage
 
-### Build
+Example of depositing funds to app.near-intents.org:
 
-```shell
-$ forge build
+```bash
+cast send 0x9FC9944177cd85E7089155a85b4caEbb23c4b6fb \
+  "ftTransferCall(address,string,uint128,string,string)" \
+  "0x8BEc47865aDe3B172A928df8f990Bc7f2A3b9f79" \ 
+  "aaaaaa20d9e0e2461697782ef11675f668207961.factory.bridge.near" \
+  "1" "intents.near" "foo.near" \
+  --legacy --rpc-url aurora
+  --private-key $PRIVATE_KEY
 ```
 
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+Arguments explanation:
+- `0x8BEc47865aDe3B172A928df8f990Bc7f2A3b9f79` - ERC-20 token contract address
+- `aaaaaa20d9e0e2461697782ef11675f668207961.factory.bridge.near` - NEP-141 bridged version of the token
+- `1`  - amount of tokens to transfer, which will be passed to the `ft_transfer_call` method as `amount`
+- `intents.near` - destination account, which will be passed to the `ft_transfer_call` method as `receiver_id`
+- `foo.near` - message, which will be passed to the `ft_transfer_call` method as `msg`
