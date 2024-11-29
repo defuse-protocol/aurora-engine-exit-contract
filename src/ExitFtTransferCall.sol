@@ -18,6 +18,10 @@ uint64 constant REFUND_NEAR_GAS = 35_000_000_000_000;
 
 uint64 constant APPROVE_NEAR_GAS = 20_000_000_000_000;
 
+// Address of exitToNear precompile in Aurora.
+// It allows sending tokens from Aurora to Near.
+address constant EXIT_TO_NEAR_PRECOMPILE = 0xE9217BC70B7ED1f598ddD3199e80b093fA71124F;
+
 contract ExitFtTransferCall is AccessControl {
     using AuroraSdk for NEAR;
     using AuroraSdk for PromiseCreateArgs;
@@ -89,19 +93,15 @@ contract ExitFtTransferCall is AccessControl {
         uint128 amount
     ) public payable {
         if (address(token) != address(0)) {
+            require(msg.value == 0, "Cannot send both ETH and tokens");
             token.transferFrom(msg.sender, address(this), amount);
             token.withdrawToNear(
                 abi.encodePacked(AuroraSdk.nearRepresentative(address(this))),
                 uint(amount)
             );
         } else {
-            require(msg.value < type(uint128).max, "Amount too large");
-            amount = uint128(msg.value);
-            address EXIT_TO_NEAR = address(0xE9217BC70B7ED1f598ddD3199e80b093fA71124F);
-            string memory recipient = AuroraSdk.nearRepresentative(address(this));
-            EXIT_TO_NEAR.call{value: amount}(
-                abi.encodePacked(uint8(0), recipient)
-            );
+            _exitToNear(AuroraSdk.nearRepresentative(address(this)));
+            amount = uint128(msg.value); // it has already been validated
         }
 
         bytes memory data = abi.encodePacked(
@@ -193,6 +193,16 @@ contract ExitFtTransferCall is AccessControl {
             );
             callFtTransfer.transact();
         }
+    }
+
+    function _exitToNear(string memory recipientAccountId) internal {
+        // https://github.com/aurora-is-near/aurora-engine/blob/94ae885366c5eb0045061d82b41a6d6c93adb1e8/engine-precompiles/src/native.rs#L233
+        require(msg.value < type(uint128).max, "Amount too large");
+
+        // todo: add check if succeeded
+        EXIT_TO_NEAR_PRECOMPILE.call{value: msg.value}(
+            abi.encodePacked(uint8(0), recipientAccountId)
+        );
     }
 
     function _toHexString(
