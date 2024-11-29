@@ -32,11 +32,10 @@ contract ExitFtTransferCall is AccessControl {
     bytes16 private constant _SYMBOLS = "0123456789abcdef";
 
     IERC20 public wNEAR;
-    string public nearAccountId;
     NEAR public near;
 
-    function initialize(string memory _nearAccountId, IERC20 _wNEAR) external {
-        nearAccountId = _nearAccountId;
+    // todo: restrict access to this function
+    function initialize(IERC20 _wNEAR) external {
         near = AuroraSdk.initNear(_wNEAR);
         wNEAR = _wNEAR;
         _grantRole(

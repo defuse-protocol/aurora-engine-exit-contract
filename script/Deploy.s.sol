@@ -8,11 +8,12 @@ import {ExitFtTransferCall} from "../src/ExitFtTransferCall.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
+// Address of wNEAR ERC20 on mainnet
+address constant wNEAR_MAINNET = 0xC42C30aC6Cc15faC9bD938618BcaA1a1FaE8501d;
+
 contract Deploy is Script {
     function run() external returns (address, address, address) {
-        address deployer = msg.sender;
-        string memory nearAccountId = "intents.near"; // Defuse intent account on Near
-        IERC20 wNEAR = IERC20(0xC42C30aC6Cc15faC9bD938618BcaA1a1FaE8501d);
+        IERC20 wNEAR = IERC20(wNEAR_MAINNET);
 
         vm.startBroadcast();
 
@@ -25,7 +26,7 @@ contract Deploy is Script {
         Proxy proxy = new ExitProxy(
             address(logic),
             address(proxyAdmin),
-            abi.encodeWithSelector(logic.initialize.selector, nearAccountId, wNEAR)
+            abi.encodeWithSelector(logic.initialize.selector, wNEAR)
         );
 
         vm.stopBroadcast();
