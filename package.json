@@ -2,5 +2,8 @@
   "name": "aurora-engine-deposit-contract",
   "version": "1.0.0",
   "description": "",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.1"
+  }
 }
