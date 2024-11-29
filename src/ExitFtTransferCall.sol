@@ -118,7 +118,10 @@ contract ExitFtTransferCall is AccessControl {
             '"}'
         );
 
-        PromiseCreateArgs memory callFtTransfer = this.foo(tokenId, data);
+        // Call createFtTransferCall as an external method to ensure it is executed in the context of the contract.
+        // This is necessary because Aurora SDK creates a call object and wNEAR will be deducted from msg.sender.
+        // When the contract calls itself, the contract itself will be the caller, and wNEAR will be deducted from the contract.
+        PromiseCreateArgs memory callFtTransfer = this.createFtTransferCall(tokenId, data);
         callFtTransfer.transact();
 
         /**
@@ -141,7 +144,7 @@ contract ExitFtTransferCall is AccessControl {
         */
     }
 
-    function foo(
+    function createFtTransferCall(
         string memory tokenId,
         bytes memory data
     ) public returns (PromiseCreateArgs memory) {
