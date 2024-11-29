@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: CC-BY-1.0
-pragma solidity ^0.8.17;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 import "forge-std/Script.sol";
 import {ExitFtTransferCall} from "../src/ExitFtTransferCall.sol";
