@@ -19,7 +19,7 @@ contract Deploy is Script {
         // Deploy the logic contract
         ExitFtTransferCall logic = new ExitFtTransferCall();
 
-        address proxyAdmin = new ProxyAdmin();
+        ProxyAdmin proxyAdmin = new ProxyAdmin();
 
         // Deploy the proxy and link it to the logic contract
         Proxy proxy = new ExitProxy(
