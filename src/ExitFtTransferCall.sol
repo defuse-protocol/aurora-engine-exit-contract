@@ -117,7 +117,12 @@ contract ExitFtTransferCall is AccessControl {
         );
 
         PromiseCreateArgs memory callFtTransfer = this.foo(tokenId, data);
+        callFtTransfer.transact();
 
+        /**
+         * Refund should be carefully implemented or better not implemented at all.
+         */
+        /*
         PromiseCreateArgs memory callback = near.auroraCall(
             address(this),
             abi.encodeWithSelector(
@@ -131,6 +136,7 @@ contract ExitFtTransferCall is AccessControl {
         );
 
         callFtTransfer.then(callback).transact();
+        */
     }
 
     function foo(
@@ -232,5 +238,6 @@ contract ExitFtTransferCall is AccessControl {
         }
     }
 
+    // This is required for being a proxy implementation (otherwise it throws)
     receive() external payable {}
 }
