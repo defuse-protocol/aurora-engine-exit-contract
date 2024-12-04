@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: aurora-engine-exit-contract
+  description: |-
+    Provides functionality for exiting aurora engine
+  tags:
+    - contract
+    - aurora
+  links: []
+  annotations:
+    aurora.dev/security-tier: "1"
+spec:
+  owner: defuse-team
+  type: contract
+  lifecycle: production
+  system: defuse-protocol
