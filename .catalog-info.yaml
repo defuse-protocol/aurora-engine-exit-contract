@@ -15,3 +15,5 @@ spec:
   type: contract
   lifecycle: production
   system: defuse-protocol
+  deployedAt:
+    - contract:aurora/mainnet/0x9FC9944177cd85E7089155a85b4caEbb23c4b6fb
