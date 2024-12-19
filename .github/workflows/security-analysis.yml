@@ -6,9 +6,12 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   security_analysis:
     name: Shared
     uses: aurora-is-near/.github/.github/workflows/security_analysis.yml@master
-    secrets: inherit
+    secrets:
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
